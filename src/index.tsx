@@ -1,4 +1,6 @@
 import { h, render } from "preact";
 
+import App from "./components/App";
+
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-render(<div>Rendered from React</div>, document.querySelector(".root")!);
+render(<App />, document.querySelector(".root")!);
