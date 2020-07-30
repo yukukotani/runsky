@@ -1,29 +1,36 @@
 import { h } from "preact";
+import { useState } from "preact/hooks";
+import Editor from "./Editor";
+import { generateHtml } from "../libs/generateHtml";
 
-const html = `
-<!DOCTYPE html>
-<head>
-  <title>iframe</title>
-  <meta charset="utf8" />
-</head>
-<body>
-  <div id="iframe-root"></div>
-  <script type="module">
-    import React from 'https://cdn.skypack.dev/react';
-    import ReactDOM from 'https://cdn.skypack.dev/react-dom';
+const wrapperStyle = {
+  display: "flex",
+  width: "100vw",
+  height: "100vh",
+};
 
-    const el = React.createElement('div', {}, 'in the iframe');
-    ReactDOM.render(el, document.getElementById('iframe-root'));
-  </script>
-</body>
-
-`;
+const flexChildStyle = {
+  flexGrow: "1",
+};
 
 export default function App() {
+  const [src, setSrc] = useState<string>("");
+
   return (
-    <div>
-      <div>out of iframe</div>
-      <iframe srcDoc={html} />
+    <div style={wrapperStyle}>
+      <div style={flexChildStyle}>
+        <Editor text={src} setText={setSrc} />
+      </div>
+      <div style={flexChildStyle}>
+        <iframe
+          style={{
+            width: "100%",
+            height: "100%",
+            padding: 0,
+          }}
+          srcDoc={generateHtml(src)}
+        />
+      </div>
     </div>
   );
 }
