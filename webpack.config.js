@@ -1,5 +1,6 @@
 /* eslint-disable */
 const CopyPlugin = require("copy-webpack-plugin");
+const WorkerPlugin = require("worker-plugin");
 
 const copyRules = [
   {
@@ -15,6 +16,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.worker\.ts$/,
+        use: [
+          {
+            loader: "comlink-loader",
+            options: {
+              singleton: true,
+            },
+          },
+        ],
+      },
+      {
         test: /\.tsx?$/,
         use: [
           {
@@ -24,5 +36,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [new CopyPlugin({ patterns: copyRules })],
+  plugins: [new CopyPlugin({ patterns: copyRules }, new WorkerPlugin())],
 };
