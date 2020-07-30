@@ -1,26 +1,21 @@
 import { h, FunctionalComponent } from "preact";
 
 interface Props {
+  style: any;
   text: string;
   setText: (text: string) => void;
 }
 
-const Editor: FunctionalComponent<Props> = ({ text, setText }) => {
+const Editor: FunctionalComponent<Props> = ({ style, text, setText }) => {
   return (
     <textarea
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: 0,
-        resize: "none",
-      }}
+      style={style}
       value={text}
       onInput={(e) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setText((e.target as any).value);
       }}
-    >
-    </textarea>
+    ></textarea>
   );
 };
 
