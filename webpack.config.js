@@ -1,6 +1,6 @@
 /* eslint-disable */
 const CopyPlugin = require('copy-webpack-plugin');
-const WorkerPlugin = require('worker-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const copyRules = [
   {
@@ -38,7 +38,15 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.ttf$/,
+        use: ['file-loader'],
+      },
     ],
   },
-  plugins: [new CopyPlugin({ patterns: copyRules }, new WorkerPlugin())],
+  plugins: [new CopyPlugin({ patterns: copyRules }), new MonacoWebpackPlugin()],
 };
