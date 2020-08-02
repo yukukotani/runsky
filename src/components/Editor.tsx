@@ -50,7 +50,7 @@ const Editor: FunctionalComponent<Props> = ({ atom, monacoModel }) => {
         setCode(editor.getValue());
       });
     }
-  }, [monacoModel]);
+  }, [editor, monacoModel]);
 
   return <div ref={ref} class={EditorStyleClass} />;
 };
