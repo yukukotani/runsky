@@ -32,6 +32,9 @@
   "dependencies": {
     "@babel/standalone": "^7.10.5",
     "babel-plugin-replace-import": "^0.7.0",
-    "preact": "^10.4.6"
+    "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.9.0",
+    "preact": "^10.4.6",
+    "recoil": "^0.0.10"
   }
 }

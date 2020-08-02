@@ -1,15 +1,11 @@
 import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import {  useEffect, useState } from "preact/hooks";
+import {
+  useRecoilValue,
+} from 'recoil';
 import Editor from "./Editor";
 import { generateHtml } from "../libs/generateHtml.worker";
-
-const defaultInput = `
-import React  from "react";
-import ReactDOM from "react-dom";
-
-const element = React.createElement("div", {}, "rendered by React in iframe");
-ReactDOM.render(element, document.getElementById("iframe-root"));
-`;
+import { jsCodeState } from "../atoms/code";
 
 const wrapperStyle = {
   display: "flex",
@@ -31,24 +27,24 @@ const childStyle = {
 };
 
 export default function App() {
-  const [js, setJs] = useState<string>(defaultInput);
-  const [src, setSrc] = useState<string>("");
+  const jsCode = useRecoilValue(jsCodeState)
+  const [generatedHtml, setGeneratedHtml] = useState("")
 
   useEffect(() => {
     const f = async () => {
-      setSrc(await generateHtml(js));
+      setGeneratedHtml(await generateHtml(jsCode));
     };
     f();
-  });
+  }, [jsCode]);
 
   return (
-    <div style={wrapperStyle}>
-      <div style={flexChildStyle}>
-        <Editor style={childStyle} text={js} setText={setJs} />
+      <div style={wrapperStyle}>
+        <div style={flexChildStyle}>
+          <Editor style={childStyle} atom={jsCodeState}/>
+        </div>
+        <div style={flexChildStyle}>
+          <iframe style={childStyle} srcDoc={generatedHtml} />
+        </div>
       </div>
-      <div style={flexChildStyle}>
-        <iframe style={childStyle} srcDoc={src} />
-      </div>
-    </div>
   );
 }
