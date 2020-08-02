@@ -1,15 +1,19 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
-const initialJsCode = `
-import React  from "react";
+const initialHtmlCode = `<div id="root" />`;
+
+const initialJsCode = `import React  from "react";
 import ReactDOM from "react-dom";
 
 const element = React.createElement("div", {}, "rendered by React in iframe");
-ReactDOM.render(element, document.getElementById("iframe-root"));
-`;
+ReactDOM.render(element, document.getElementById("root"));`;
 
+export const htmlCodeState = atom({
+  key: 'htmlCodeState',
+  default: initialHtmlCode,
+});
 
 export const jsCodeState = atom({
-  key: 'textState',
-  default: initialJsCode, 
+  key: 'jsCodeState',
+  default: initialJsCode,
 });

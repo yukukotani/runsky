@@ -2,7 +2,7 @@ import * as babel from "@babel/standalone";
 
 import pluginPluginReplaceImport from "babel-plugin-replace-import";
 
-export async function generateHtml(js: string): Promise<string> {
+export async function generateHtml(html: string, js: string): Promise<string> {
   const result = babel.transform(js, {
     plugins: [
       [
@@ -23,7 +23,7 @@ export async function generateHtml(js: string): Promise<string> {
     <meta charset="utf8" />
   </head>
   <body>
-    <div id="iframe-root"></div>
+    ${html}
     <script type="module">
       ${result?.code}
     </script>

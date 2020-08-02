@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useRecoilValue } from 'recoil';
 import Editor from './Editor';
 import { generateHtml } from '../libs/generateHtml.worker';
-import { jsCodeState } from '../atoms/code';
+import { jsCodeState, htmlCodeState } from '../atoms/code';
 import * as monaco from 'monaco-editor';
 import { styled } from 'goober';
 
@@ -26,32 +26,64 @@ const StyledIFrame = styled('iframe')`
   overflow-x: scroll;
 `;
 
-const initialModel = monaco.editor.createModel(
-  `
-import React  from "react";
-import ReactDOM from "react-dom";
+const EditorTabs = styled('div')`
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background-color: rgb(50, 50, 50);
+  display: flex;
+  color: white;
 
-const element = React.createElement("div", {}, "rendered by React in iframe");
-ReactDOM.render(element, document.getElementById("iframe-root"));
-`,
-  'javascript'
-);
+  div {
+    height: 100%;
+    padding: 0 12px;
+  }
+
+  div.active {
+    background-color: rgb(30, 30, 30);
+  }
+`;
+
+const tabs = [
+  {
+    name: 'HTML',
+    model: monaco.editor.createModel('', 'html'),
+    atom: htmlCodeState,
+  },
+  {
+    name: 'JavaScript',
+    model: monaco.editor.createModel('', 'javascript'),
+    atom: jsCodeState,
+  },
+];
 
 export default function App() {
+  const htmlCode = useRecoilValue(htmlCodeState);
   const jsCode = useRecoilValue(jsCodeState);
   const [generatedHtml, setGeneratedHtml] = useState('');
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   useEffect(() => {
     const f = async () => {
-      setGeneratedHtml(await generateHtml(jsCode));
+      setGeneratedHtml(await generateHtml(htmlCode, jsCode));
     };
     f();
-  }, [jsCode]);
+  }, [htmlCode, jsCode]);
 
   return (
     <FlexContainer>
       <FlexItem>
-        <Editor atom={jsCodeState} monacoModel={initialModel} />
+        <EditorTabs>
+          {tabs.map((tab) => (
+            <div
+              onClick={() => setActiveTab(tab)}
+              className={activeTab.name === tab.name ? 'active' : ''}
+            >
+              {tab.name}
+            </div>
+          ))}
+        </EditorTabs>
+        <Editor atom={activeTab.atom} monacoModel={activeTab.model} />
       </FlexItem>
       <FlexItem>
         <StyledIFrame srcDoc={generatedHtml} />

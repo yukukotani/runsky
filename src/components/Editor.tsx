@@ -50,6 +50,7 @@ const Editor: FunctionalComponent<Props> = ({ atom, monacoModel }) => {
   useEffect(() => {
     if (editor) {
       editor.setModel(monacoModel);
+      monacoModel.setValue(code);
       monacoModel.onDidChangeContent(() => {
         setCode(editor.getValue());
       });
