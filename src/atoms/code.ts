@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const initialHtmlCode = `<div id="root" />`;
 
-const initialJsCode = `import React  from "react";
+const initialJsCode = `import React from "react";
 import ReactDOM from "react-dom";
 
 const element = React.createElement("div", {}, "rendered by React in iframe");
