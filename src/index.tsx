@@ -1,7 +1,15 @@
-import { h, render } from "preact";
+import { h, render } from 'preact';
+import { RecoilRoot } from 'recoil';
+import { setup } from 'goober';
 
-import App from "./components/App";
-import { RecoilRoot } from "recoil";
+import App from './components/App';
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-render(<RecoilRoot><App /></RecoilRoot>, document.querySelector(".root")!);
+setup(h);
+
+render(
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  document.querySelector('.root')!
+);

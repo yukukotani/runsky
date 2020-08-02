@@ -3,16 +3,22 @@ import { RecoilState, useRecoilState } from 'recoil';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import * as monaco from 'monaco-editor';
+import { css } from 'goober';
 
 declare const ResizeObserver: any;
 
+const EditorStyleClass = css`
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+`;
+
 interface Props {
-  style: any;
   atom: RecoilState<string>;
   monacoModel: monaco.editor.ITextModel;
 }
 
-const Editor: FunctionalComponent<Props> = ({ style, atom, monacoModel }) => {
+const Editor: FunctionalComponent<Props> = ({ atom, monacoModel }) => {
   const [, setCode] = useRecoilState(atom);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -46,7 +52,7 @@ const Editor: FunctionalComponent<Props> = ({ style, atom, monacoModel }) => {
     }
   }, [monacoModel]);
 
-  return <div ref={ref} style={style} />;
+  return <div ref={ref} class={EditorStyleClass} />;
 };
 
 export default Editor;

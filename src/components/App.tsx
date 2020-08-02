@@ -5,25 +5,26 @@ import Editor from './Editor';
 import { generateHtml } from '../libs/generateHtml.worker';
 import { jsCodeState } from '../atoms/code';
 import * as monaco from 'monaco-editor';
+import { styled } from 'goober';
 
-const wrapperStyle = {
-  display: 'flex',
-  width: '100vw',
-  height: '100vh',
-};
+const FlexContainer = styled('div')`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
 
-const flexChildStyle = {
-  flex: '1 0 50%',
-};
+const FlexItem = styled('div')`
+  flex: 1 0 50%;
+  height: 100%;
+`;
 
-const childStyle = {
-  width: '100%',
-  height: '100%',
-  padding: 0,
-  margin: 0,
-  overflowY: 'scroll',
-  overflowX: 'scroll',
-};
+const StyledIFrame = styled('iframe')`
+  height: 100%;
+  width: 100%;
+  border: 0;
+  overflow-y: scroll;
+  overflow-x: scroll;
+`;
 
 const initialModel = monaco.editor.createModel(
   `
@@ -48,17 +49,13 @@ export default function App() {
   }, [jsCode]);
 
   return (
-    <div style={wrapperStyle}>
-      <div style={flexChildStyle}>
-        <Editor
-          style={childStyle}
-          atom={jsCodeState}
-          monacoModel={initialModel}
-        />
-      </div>
-      <div style={flexChildStyle}>
-        <iframe style={childStyle} srcDoc={generatedHtml} />
-      </div>
-    </div>
+    <FlexContainer>
+      <FlexItem>
+        <Editor atom={jsCodeState} monacoModel={initialModel} />
+      </FlexItem>
+      <FlexItem>
+        <StyledIFrame srcDoc={generatedHtml} />
+      </FlexItem>
+    </FlexContainer>
   );
 }
