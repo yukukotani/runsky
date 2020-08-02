@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Editor: FunctionalComponent<Props> = ({ atom, monacoModel }) => {
-  const [, setCode] = useRecoilState(atom);
+  const [code, setCode] = useRecoilState(atom);
 
   const ref = useRef<HTMLDivElement>(null);
   const [
@@ -30,9 +30,13 @@ const Editor: FunctionalComponent<Props> = ({ atom, monacoModel }) => {
   useEffect(() => {
     if (ref.current) {
       const editor = monaco.editor.create(ref.current, {
+        value: code,
         model: monacoModel,
         fontSize: 18,
         theme: 'vs-dark',
+        minimap: {
+          enabled: false,
+        },
       });
       setEditor(editor);
       editor.layout();
