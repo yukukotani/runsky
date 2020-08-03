@@ -2,6 +2,8 @@
 const CopyPlugin = require('copy-webpack-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
+const isProd = process.env.NODE_ENV === "production";
+
 const copyRules = [
   {
     from: __dirname + '/src/index.html',
@@ -49,4 +51,5 @@ module.exports = {
     ],
   },
   plugins: [new CopyPlugin({ patterns: copyRules }), new MonacoWebpackPlugin()],
+  devtool: isProd ? "source-map" : "inline-source-map",
 };
