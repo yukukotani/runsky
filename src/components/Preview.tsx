@@ -1,10 +1,26 @@
 import { FunctionalComponent, h } from 'preact';
 import { styled } from 'goober';
 import { useRecoilValue } from 'recoil';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 
 import { htmlCodeState, jsCodeState } from '../atoms/code';
-import { generateHtml } from '../libs/generateHtml.worker';
+import { transpileScript } from '../libs/transpileScript';
+
+function generateIframeSource(html: string, js: string) {
+  return `
+  <!DOCTYPE html>
+  <head>
+    <title>iframe</title>
+    <meta charset="utf8" />
+  </head>
+  <body>
+    ${html}
+    <script type="module">
+      ${js}
+    </script>
+  </body>
+  `;
+}
 
 const StyledIFrame = styled('iframe')`
   height: 100%;
@@ -17,16 +33,20 @@ const StyledIFrame = styled('iframe')`
 const Preview: FunctionalComponent = () => {
   const htmlCode = useRecoilValue(htmlCodeState);
   const jsCode = useRecoilValue(jsCodeState);
-  const [generatedHtml, setGeneratedHtml] = useState('');
+  const [transpiledJsCode, setTranspiledJsCode] = useState('');
 
   useEffect(() => {
     const f = async () => {
-      setGeneratedHtml(await generateHtml(htmlCode, jsCode));
+      setTranspiledJsCode(await transpileScript(jsCode));
     };
     f();
-  }, [htmlCode, jsCode]);
+  }, [jsCode]);
 
-  return <StyledIFrame srcDoc={generatedHtml} />;
+  const iFrameSource = useMemo(() => {
+    return generateIframeSource(htmlCode, transpiledJsCode);
+  }, [htmlCode, transpiledJsCode]);
+
+  return <StyledIFrame srcDoc={iFrameSource} />;
 };
 
 export default Preview;

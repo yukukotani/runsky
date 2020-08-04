@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@babel/types": "^7.10.5",
+    "@types/babel__core": "^7.1.9",
     "@types/babel__standalone": "^7.1.2",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
     "@typescript-eslint/parser": "^3.7.1",
