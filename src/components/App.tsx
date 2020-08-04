@@ -1,11 +1,10 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import { useRecoilValue } from 'recoil';
+import { useState } from 'preact/hooks';
 import Editor from './Editor';
-import { generateHtml } from '../libs/generateHtml.worker';
 import { jsCodeState, htmlCodeState } from '../atoms/code';
 import * as monaco from 'monaco-editor';
 import { styled } from 'goober';
+import Preview from './Preview';
 
 const FlexContainer = styled('div')`
   display: flex;
@@ -16,14 +15,6 @@ const FlexContainer = styled('div')`
 const FlexItem = styled('div')`
   flex: 1 0 50%;
   height: 100%;
-`;
-
-const StyledIFrame = styled('iframe')`
-  height: 100%;
-  width: 100%;
-  border: 0;
-  overflow-y: scroll;
-  overflow-x: scroll;
 `;
 
 const EditorTabs = styled('div')`
@@ -58,17 +49,7 @@ const tabs = [
 ];
 
 export default function App() {
-  const htmlCode = useRecoilValue(htmlCodeState);
-  const jsCode = useRecoilValue(jsCodeState);
-  const [generatedHtml, setGeneratedHtml] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
-
-  useEffect(() => {
-    const f = async () => {
-      setGeneratedHtml(await generateHtml(htmlCode, jsCode));
-    };
-    f();
-  }, [htmlCode, jsCode]);
 
   return (
     <FlexContainer>
@@ -86,7 +67,7 @@ export default function App() {
         <Editor atom={activeTab.atom} monacoModel={activeTab.model} />
       </FlexItem>
       <FlexItem>
-        <StyledIFrame srcDoc={generatedHtml} />
+        <Preview />
       </FlexItem>
     </FlexContainer>
   );
