@@ -15,6 +15,7 @@ const FlexContainer = styled('div')`
 const FlexItem = styled('div')`
   flex: 1 0 50%;
   height: 100%;
+  width: 50%;
 `;
 
 const EditorTabs = styled('div')`

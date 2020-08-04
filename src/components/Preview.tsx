@@ -26,18 +26,33 @@ const StyledIFrame = styled('iframe')`
   height: 100%;
   width: 100%;
   border: 0;
-  overflow-y: scroll;
-  overflow-x: scroll;
+  overflow: scroll;
+`;
+
+const ErrorContainer = styled('div')`
+  height: 100%;
+  width: 100%;
+  color: red;
+  white-space: pre;
+  padding: 8px;
+  overflow: scroll;
 `;
 
 const Preview: FunctionalComponent = () => {
   const htmlCode = useRecoilValue(htmlCodeState);
   const jsCode = useRecoilValue(jsCodeState);
   const [transpiledJsCode, setTranspiledJsCode] = useState('');
+  const [transpileError, setTranspileError] = useState<string | null>(null);
 
   useEffect(() => {
     const f = async () => {
-      setTranspiledJsCode(await transpileScript(jsCode));
+      try {
+        const transpiled = await transpileScript(jsCode);
+        setTranspiledJsCode(transpiled);
+        setTranspileError(null);
+      } catch (error) {
+        setTranspileError(error.message);
+      }
     };
     f();
   }, [jsCode]);
@@ -46,7 +61,11 @@ const Preview: FunctionalComponent = () => {
     return generateIframeSource(htmlCode, transpiledJsCode);
   }, [htmlCode, transpiledJsCode]);
 
-  return <StyledIFrame srcDoc={iFrameSource} />;
+  return transpileError ? (
+    <ErrorContainer>{transpileError}</ErrorContainer>
+  ) : (
+    <StyledIFrame srcDoc={iFrameSource} />
+  );
 };
 
 export default Preview;
