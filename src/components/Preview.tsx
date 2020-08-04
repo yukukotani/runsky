@@ -47,7 +47,17 @@ const Preview: FunctionalComponent = () => {
   useEffect(() => {
     const f = async () => {
       try {
-        const transpiled = await transpileScript(jsCode);
+        const transpiled = await transpileScript(jsCode, {
+          babelPlugins: [
+            {
+              name: 'babel-plugin-replace-import',
+              options: {
+                src: /^(.+)$/,
+                dest: 'https://cdn.skypack.dev/$1',
+              },
+            },
+          ],
+        });
         setTranspiledJsCode(transpiled);
         setTranspileError(null);
       } catch (error) {
